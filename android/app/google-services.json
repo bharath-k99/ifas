@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "344510323864",
+    "firebase_url": "https://ifas-c0ba6.firebaseio.com",
+    "project_id": "ifas-c0ba6",
+    "storage_bucket": "ifas-c0ba6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:344510323864:android:d215a4067f67c05d",
+        "android_client_info": {
+          "package_name": "com.ifasapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "344510323864-5aim9okkqvo7nskemdp84oph57d4k9ii.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYnk7FhJUyCAjiuRAV9uU1H51jEQ-AFPc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

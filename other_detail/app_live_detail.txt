@@ -1,0 +1,681 @@
+1)
+IFAS App:-
+Keystore Detail
+Alias:ifasaap
+password:password
+
+for make  release through CMD: ./gradlew assembleRelease
+
+xcode swifte defi:
+/usr/lib/swift
+
+
+//START LIVE CONFERENCE FOR LOCAL URL
+http://35.154.11.3/pa/ifas/apis/cronStartExpireConference.json
+https://mconf.github.io/api-mate/
+
+ganpat, 11:58
+For Live Session
+http://35.154.11.3/pa/ifas/apis/cronLiveVideoExpire/1
+http://35.154.11.3/pa/ifas/apis/cronLiveVideoExpire/2
+
+
+
+
+//FOR DOWNLOAD AUDIO VIDEO
+
+extractorYoutubeURL = (youtubeUrl, videoKey, type, rowItem) => {
+
+
+        console.warn('Format found! url' + JSON.stringify(youtubeUrl) + '\n\n' + videoKey + '\n\n' + type);
+        let downindicatorMsg = undefined;
+        if (type == 'video') {
+            downindicatorMsg = 'Please wait while downloading video'
+        } else {
+            downindicatorMsg = 'Please wait while downloading audio'
+        }
+        this.setState({
+            isProgress: true,
+            progress: 0,
+            downloadingIndicatorMessage: downindicatorMsg
+        })
+        if (type == 'video') {
+            ytdl.getInfo(youtubeUrl, {}, (err, info) => {
+                console.log('format error video1' + JSON.stringify(err) + '\n\n' + JSON.stringify(info));
+                if (info != undefined && info.formats != undefined) {
+                    //101 audio 140
+                    let format = ytdl.chooseFormat(info.formats, { quality: this.state.selctedItemQuality });
+                    console.warn('Format found! video2' + JSON.stringify(format.url));
+                    if (format != undefined && format.url != undefined) {
+                        console.warn('Format found! video3' + JSON.stringify(format));
+                        this.setState({
+                            downloadingAudioVideoURL: format.url
+                        })
+                        this.downloadVideoWithProgress(format.url, videoKey, 'video', rowItem)
+                    } else {
+                        let format = ytdl.chooseFormat(info.formats, { quality: '18' });
+                        console.warn('Format found! video else1' + JSON.stringify(format.url));
+                        if (format != undefined && format.url != undefined) {
+                            console.warn('Format found! video else2' + JSON.stringify(format));
+                            this.setState({
+                                downloadingAudioVideoURL: format.url
+                            })
+                            this.downloadVideoWithProgress(format.url, videoKey, 'video', rowItem)
+                        } else {
+
+                            console.warn('Format found! video else3');
+                            //Check here temp_url isEmpty
+                            if (rowItem.TMP_VIDEO_URL != '' && rowItem.TMP_VIDEO_URL != null) {
+                                console.warn('Format found! video else4');
+                                this.setState({
+                                    downloadingAudioVideoURL: rowItem.TMP_VIDEO_URL
+                                })
+                                this.downloadVideoWithProgress(rowItem.TMP_VIDEO_URL, videoKey, 'video', rowItem)
+                            } else {
+                                console.warn('Format found! video else5');
+                                //Check here main url is youtube or not
+                                if (!youtubeUrl.includes('https://www.youtube.com/')) {
+                                    console.warn('Format found! video else6');
+                                    this.setState({
+                                        downloadingAudioVideoURL: youtubeUrl
+                                    })
+                                    this.downloadVideoWithProgress(youtubeUrl, videoKey, 'video', rowItem)
+                                } else {
+                                    console.warn('Format found! video else55');
+                                    this.setState({
+                                        isProgress: false
+                                    })
+                                    Toast.show('No video available. Please contact to admin for more details.')
+                                }
+                                // else{
+                                //     this.downloadVideoWithProgress(youtubeUrl, videoKey, 'video', rowItem)   
+                                // }
+                            }
+                        }
+                    }
+                } else {
+                    console.warn('Format found! video else7');
+                    if (rowItem.TMP_VIDEO_URL != '' && rowItem.TMP_VIDEO_URL != null) {
+                        console.warn('Format found! video else8');
+                        this.setState({
+                            downloadingAudioVideoURL: rowItem.TMP_VIDEO_URL
+                        })
+                        this.downloadVideoWithProgress(rowItem.TMP_VIDEO_URL, videoKey, 'video', rowItem)
+                    } else {
+                        console.warn('Format found! video else9');
+                        //Check here main url is youtube or not
+                        if (!youtubeUrl.includes('https://www.youtube.com/')) {
+                            console.warn('Format found! video else10');
+                            this.setState({
+                                downloadingAudioVideoURL: youtubeUrl
+                            })
+                            this.downloadVideoWithProgress(youtubeUrl, videoKey, 'video', rowItem)
+                        } else {
+                            console.warn('Format found! video else11');
+                            this.setState({
+                                isProgress: false
+                            })
+                            Toast.show('No video available. Please contact to admin for more details.')
+                        }
+                    }
+                    //Toast.show('This video/audio is not downloadable. Please contact to admin for more details.')
+                }
+            });
+        } else {
+            ytdl.getInfo(youtubeUrl, {}, (err, info) => {
+                console.log('format error audio' + JSON.stringify(err) + '\n\n' + JSON.stringify(info));
+                if (info != undefined && info.formats != undefined) {
+                    //101 audio 140
+                    let format = ytdl.chooseFormat(info.formats, { quality: '140' });
+                    console.warn('Format found! audio' + JSON.stringify(format.url));
+                    if (format != undefined && format.url != undefined) {
+                        this.setState({
+                            downloadingAudioVideoURL: format.url
+                        })
+                        this.downloadVideoWithProgress(format.url, videoKey, 'audio', rowItem)
+                    } else {
+                        if (rowItem.TMP_AUDIO_URL != '' && rowItem.TMP_AUDIO_URL != null) {
+                            this.setState({
+                                downloadingAudioVideoURL: rowItem.TMP_AUDIO_URL
+                            })
+                            this.downloadVideoWithProgress(rowItem.TMP_AUDIO_URL, videoKey, 'audio', rowItem)
+                        } else {
+                            //Check here main url is youtube or not
+                            if (!youtubeUrl.includes('https://www.youtube.com/')) {
+                                this.setState({
+                                    downloadingAudioVideoURL: youtubeUrl
+                                })
+                                this.downloadVideoWithProgress(youtubeUrl, videoKey, 'audio', rowItem)
+                            } else {
+                                this.setState({
+                                    isProgress: false
+                                })
+                                Toast.show('No audio available. Please contact to admin for more details.')
+                            }
+                        }
+                    }
+                } else {
+                    if (rowItem.TMP_AUDIO_URL != '' && rowItem.TMP_AUDIO_URL != null) {
+                        this.setState({
+                            downloadingAudioVideoURL: rowItem.TMP_AUDIO_URL
+                        })
+                        this.downloadVideoWithProgress(rowItem.TMP_AUDIO_URL, videoKey, 'audio', rowItem)
+                    } else {
+                        //Check here main url is youtube or not
+                        if (!youtubeUrl.includes('https://www.youtube.com/')) {
+                            this.setState({
+                                downloadingAudioVideoURL: youtubeUrl
+                            })
+                            this.downloadVideoWithProgress(youtubeUrl, videoKey, 'audio', rowItem)
+                        } else {
+                            this.setState({
+                                isProgress: false
+                            })
+                            Toast.show('No audio available. Please contact to admin for more details.')
+                        }
+                    }
+                    //Toast.show('This video/audio is not downloadable. Please contact to admin for more details.')
+                }
+            });
+        }
+    }
+
+//FOR AUDIO
+
+    extractorYoutubeURL = (youtubeUrl) => {
+
+        const {selected_item} = this.state;
+
+        this.setState({
+            isError: true,
+            errorMessage: 'Please wait...'
+        })
+
+        console.warn('Format found! url' + JSON.stringify(youtubeUrl));
+
+        let qualityForVideo = '140';
+
+        if (selected_item != undefined && selected_item != null &&
+            selected_item != '') {
+            ytdl.getInfo(selected_item.URL, {}, (err, info) => {
+                console.log('format error URL1' + JSON.stringify(err) + '\n\n' + JSON.stringify(info));
+                // First URL extract
+                if (info != undefined && info.formats != undefined) {
+                    let format = ytdl.chooseFormat(info.formats, { quality: qualityForVideo });
+                    console.warn('Format found URL1' + JSON.stringify(format));
+                    if (format != undefined && format.url != undefined) {
+
+                        this.setState({
+                            youtubeUrl: format.url,
+                            isError: false,
+                        }, () => {
+                            this.callExtractionLogApi(this.state.access_token, format, 'success', selected_item.URL)
+                        })
+                    } else {
+                        // Second URL extract
+                        ytdl.getInfo(selected_item.URL2, {}, (err, info) => {
+                            console.log('format error URL2' + JSON.stringify(err) + '\n\n' + JSON.stringify(info));
+                            if (info != undefined && info.formats != undefined) {
+                                let format2 = ytdl.chooseFormat(info.formats, { quality: qualityForVideo });
+                                console.warn('Format found URL3' + JSON.stringify(format2));
+                                if (format2 != undefined && format2.url != undefined) {
+                                    this.setState({
+                                        youtubeUrl: format2.url,
+                                        isError: false,
+                                    }, () => {
+                                        this.callExtractionLogApi(this.state.access_token, format2, 'success', selected_item.URL2)
+                                    })
+                                } else {
+                                    //Here work for test url
+                                    if (this.state.selected_item != undefined && this.state.selected_item.TMP_AUDIO_URL != '' &&
+                                        this.state.selected_item.TMP_AUDIO_URL != null) {
+                                        console.warn('Format found! video else4');
+                                        this.setState({
+                                            youtubeUrl: this.state.selected_item.TMP_AUDIO_URL,
+                                            isError: false,
+                                        })
+                                    } else {
+                                        console.warn('Format found! video else5');
+                                        this.setState({
+                                            isError: true,
+                                            youtubeUrl: undefined,
+                                             errorMessage: 'No audio available. Please contact to admin for more details.'
+                                        }, () => {
+                                            this.callExtractionLogApi(this.state.access_token, err, 'error', selected_item.URL2)
+                                        })
+                                    }
+                                }
+                            } else {
+                                //Here work for test url
+                                if (this.state.selected_item != undefined && this.state.selected_item.TMP_AUDIO_URL != '' &&
+                                    this.state.selected_item.TMP_AUDIO_URL != null) {
+                                    console.warn('Format found! video else6');
+                                    this.setState({
+                                        youtubeUrl: this.state.selected_item.TMP_AUDIO_URL,
+                                        isError: false,
+                                    })
+                                } else {
+                                    console.warn('Format found! video else7');
+                                    this.setState({
+                                        isError: true,
+                                        youtubeUrl: undefined,
+                                         errorMessage: 'No audio available. Please contact to admin for more details.'
+                                    }, () => {
+                                        this.callExtractionLogApi(this.state.access_token, err, 'error', selected_item.URL2)
+                                    })
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    // Second URL extract(Top getInfo null error)
+                    ytdl.getInfo(selected_item.URL2, {}, (err, info) => {
+                        console.log('format error URL8 TOPGETINFO' + JSON.stringify(err) + '\n\n' + JSON.stringify(info));
+                        if (info != undefined && info.formats != undefined) {
+                            let format2 = ytdl.chooseFormat(info.formats, { quality: qualityForVideo });
+                            console.warn('Format found URL9 TOPGETINFO' + JSON.stringify(format2));
+                            if (format2 != undefined && format2.url != undefined) {
+                                this.setState({
+                                    youtubeUrl: format2.url,
+                                    isError: false,
+                                }, () => {
+                                    this.callExtractionLogApi(this.state.access_token, format2, 'success', selected_item.URL2)
+                                })
+                            } else {
+                                //Here work for test url
+                                if (this.state.selected_item != undefined && this.state.selected_item.TMP_AUDIO_URL != '' &&
+                                    this.state.selected_item.TMP_AUDIO_URL != null) {
+                                    console.warn('Format found! video else10');
+                                    this.setState({
+                                        youtubeUrl: this.state.selected_item.TMP_AUDIO_URL,
+                                        isError: false,
+                                    })
+                                } else {
+                                    console.warn('Format found! video else11');
+                                    this.setState({
+                                        isError: true,
+                                        youtubeUrl: undefined,
+                                         errorMessage: 'No audio available. Please contact to admin for more details.'
+                                    }, () => {
+                                        this.callExtractionLogApi(this.state.access_token, err, 'error', selected_item.URL2)
+                                    })
+                                }
+                            }
+                        } else {
+                            //Here work for test url
+                            if (this.state.selected_item != undefined && this.state.selected_item.TMP_AUDIO_URL != '' &&
+                                this.state.selected_item.TMP_AUDIO_URL != null) {
+                                console.warn('Format found! video else12');
+                                this.setState({
+                                    youtubeUrl: this.state.selected_item.TMP_AUDIO_URL,
+                                    isError: false,
+                                })
+                            } else {
+                                console.warn('Format found! video else13');
+                                this.setState({
+                                    isError: true,
+                                    youtubeUrl: undefined,
+                                     errorMessage: 'No audio available. Please contact to admin for more details.'
+                                }, () => {
+                                    this.callExtractionLogApi(this.state.access_token, err, 'error', selected_item.URL2)
+                                })
+                            }
+                        }
+                    });
+                }
+            })
+            .catch((e) => {
+                this.setState({
+                    isError: true,
+                    youtubeUrl: undefined,
+                    errorMessage: 'No video available. Please contact to admin for more details.'
+                }, () => {
+                    //this.callExtractionLogApi(this.state.access_token, e, 'error')
+                })
+            })
+        } else {
+            console.warn('Format found! video else13');
+            this.setState({
+                isError: true,
+                youtubeUrl: undefined,
+                 errorMessage: 'No audio available. Please contact to admin for more details.'
+            })
+        }
+    }
+
+//FOR VIDEO
+    
+
+ytdl.getInfo(url, {}, (err, info) => {
+                    console.warn('format error URL1' + JSON.stringify(err) + '\n\n' + JSON.stringify(info));
+                    // First URL extract
+                    if (info != undefined && info.formats != undefined) {
+                        let format = ytdl.chooseFormat(info.formats, { quality: qualityForVideo });
+                        console.warn('Format found URL1' + JSON.stringify(format));
+                        if (format != undefined && format.url != undefined) {
+
+                            this.setState({
+                                youtubeUrl: format.url,
+                                isError: false,
+                            }, () => {
+                                this.callExtractionLogApi(this.state.access_token, format, 'success', selected_item.URL)
+                            })
+                        } else {
+                            // Second URL extract
+                            ytdl.getInfo(selected_item.URL2, {}, (err, info) => {
+                                console.log('format error URL2' + JSON.stringify(err) + '\n\n' + JSON.stringify(info));
+                                if (info != undefined && info.formats != undefined) {
+                                    let format2 = ytdl.chooseFormat(info.formats, { quality: qualityForVideo });
+                                    console.warn('Format found URL3' + JSON.stringify(format2));
+                                    if (format2 != undefined && format2.url != undefined) {
+                                        this.setState({
+                                            youtubeUrl: format2.url,
+                                            isError: false,
+                                        }, () => {
+                                            this.callExtractionLogApi(this.state.access_token, format2, 'success', selected_item.URL2)
+                                        })
+                                    } else {
+
+                                        //check condition vimeo is visible or not
+                                        if (global.isVimeoPlayerVisible) {
+                                            //4Aug2020 adding new condition for VEMIO player
+                                            if (this.state.selected_item != undefined && this.state.selected_item.VIMEO_URL != '' &&
+                                                this.state.selected_item.VIMEO_URL != null) {
+                                                isVideoRecordingVemio = true
+                                                this.setState({
+                                                    isVimeoURLVisible: true,
+                                                    vimeoVideoIDForPlay: this.state.selected_item.VIMEO_URL,
+                                                    isError: false,
+                                                })
+                                            }
+                                            //Here work for test url
+                                            else if (this.state.selected_item != undefined && this.state.selected_item.TMP_VIDEO_URL != '' &&
+                                                this.state.selected_item.TMP_VIDEO_URL != null) {
+                                                console.warn('Format found! video else4');
+                                                this.setState({
+                                                    youtubeUrl: this.state.selected_item.TMP_VIDEO_URL,
+                                                    isError: false,
+                                                })
+                                            } else {
+                                                if (!selected_item.URL.includes('https://www.youtube.com/')) {
+                                                    console.warn('Format found! video else5');
+                                                    this.setState({
+                                                        youtubeUrl: selected_item.URL,
+                                                        isError: false,
+                                                    })
+                                                } else {
+                                                    console.warn('Format found! video else55');
+                                                    this.setState({
+                                                        isError: true,
+                                                        youtubeUrl: undefined,
+                                                        errorMessage: 'No video available. Please contact to admin for more details.'
+                                                    }, () => {
+                                                        this.callExtractionLogApi(this.state.access_token, err, 'error', selected_item.URL2)
+                                                    })
+                                                }
+                                            }
+                                        } else {
+                                            //vimeo player not visible
+                                            if (this.state.selected_item != undefined && this.state.selected_item.TMP_VIDEO_URL != '' &&
+                                                this.state.selected_item.TMP_VIDEO_URL != null) {
+                                                console.warn('Format found! video else4');
+                                                this.setState({
+                                                    youtubeUrl: this.state.selected_item.TMP_VIDEO_URL,
+                                                    isError: false,
+                                                })
+                                            } else {
+                                                if (!selected_item.URL.includes('https://www.youtube.com/')) {
+                                                    console.warn('Format found! video else5');
+                                                    this.setState({
+                                                        youtubeUrl: selected_item.URL,
+                                                        isError: false,
+                                                    })
+                                                } else {
+                                                    console.warn('Format found! video else55');
+                                                    this.setState({
+                                                        isError: true,
+                                                        youtubeUrl: undefined,
+                                                        errorMessage: 'No video available. Please contact to admin for more details.'
+                                                    }, () => {
+                                                        this.callExtractionLogApi(this.state.access_token, err, 'error', selected_item.URL2)
+                                                    })
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    //check condition vimeo is visible or not
+                                    if (global.isVimeoPlayerVisible) {
+                                        //4Aug2020 adding new condition for VEMIO player
+                                        if (this.state.selected_item != undefined && this.state.selected_item.VIMEO_URL != '' &&
+                                            this.state.selected_item.VIMEO_URL != null) {
+                                            isVideoRecordingVemio = true
+                                            this.setState({
+                                                isVimeoURLVisible: true,
+                                                vimeoVideoIDForPlay: this.state.selected_item.VIMEO_URL,
+                                                isError: false,
+                                            })
+                                        }
+                                        //Here work for test url
+                                        else if (this.state.selected_item != undefined && this.state.selected_item.TMP_VIDEO_URL != '' &&
+                                            this.state.selected_item.TMP_VIDEO_URL != null) {
+                                            console.warn('Format found! video else6');
+                                            this.setState({
+                                                youtubeUrl: this.state.selected_item.TMP_VIDEO_URL,
+                                                isError: false,
+                                            })
+                                        } else {
+                                            if (!selected_item.URL.includes('https://www.youtube.com/')) {
+                                                console.warn('Format found! video else7');
+                                                this.setState({
+                                                    youtubeUrl: selected_item.URL,
+                                                    isError: false,
+                                                })
+                                            } else {
+                                                console.warn('Format found! video else77');
+                                                this.setState({
+                                                    isError: true,
+                                                    youtubeUrl: undefined,
+                                                    errorMessage: 'No video available. Please contact to admin for more details.'
+                                                }, () => {
+                                                    this.callExtractionLogApi(this.state.access_token, err, 'error', selected_item.URL2)
+                                                })
+                                            }
+                                        }
+                                    } else {
+                                        if (this.state.selected_item != undefined && this.state.selected_item.TMP_VIDEO_URL != '' &&
+                                            this.state.selected_item.TMP_VIDEO_URL != null) {
+                                            console.warn('Format found! video else6');
+                                            this.setState({
+                                                youtubeUrl: this.state.selected_item.TMP_VIDEO_URL,
+                                                isError: false,
+                                            })
+                                        } else {
+                                            if (!selected_item.URL.includes('https://www.youtube.com/')) {
+                                                console.warn('Format found! video else7');
+                                                this.setState({
+                                                    youtubeUrl: selected_item.URL,
+                                                    isError: false,
+                                                })
+                                            } else {
+                                                console.warn('Format found! video else77');
+                                                this.setState({
+                                                    isError: true,
+                                                    youtubeUrl: undefined,
+                                                    errorMessage: 'No video available. Please contact to admin for more details.'
+                                                }, () => {
+                                                    this.callExtractionLogApi(this.state.access_token, err, 'error', selected_item.URL2)
+                                                })
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        // Second URL extract(Top getInfo null error)
+                        ytdl.getInfo(selected_item.URL2, {}, (err, info) => {
+                            console.log('format error URL8 TOPGETINFO' + JSON.stringify(err) + '\n\n' + JSON.stringify(info));
+                            if (info != undefined && info.formats != undefined) {
+                                let format2 = ytdl.chooseFormat(info.formats, { quality: qualityForVideo });
+                                console.warn('Format found URL9 TOPGETINFO' + JSON.stringify(format2));
+                                if (format2 != undefined && format2.url != undefined) {
+                                    this.setState({
+                                        youtubeUrl: format2.url,
+                                        isError: false,
+                                    }, () => {
+                                        this.callExtractionLogApi(this.state.access_token, format2, 'success', selected_item.URL2)
+                                    })
+                                } else {
+                                    //check condition vimeo is visible or not
+                                    if (global.isVimeoPlayerVisible) {
+                                        //4Aug2020 adding new condition for VEMIO player
+                                        if (this.state.selected_item != undefined && this.state.selected_item.VIMEO_URL != '' &&
+                                            this.state.selected_item.VIMEO_URL != null) {
+                                            isVideoRecordingVemio = true
+                                            this.setState({
+                                                isVimeoURLVisible: true,
+                                                vimeoVideoIDForPlay: this.state.selected_item.VIMEO_URL,
+                                                isError: false,
+                                            })
+                                        }
+                                        //Here work for test url
+                                        else if (this.state.selected_item != undefined && this.state.selected_item.TMP_VIDEO_URL != '' &&
+                                            this.state.selected_item.TMP_VIDEO_URL != null) {
+                                            console.warn('Format found! video else10');
+                                            this.setState({
+                                                youtubeUrl: this.state.selected_item.TMP_VIDEO_URL,
+                                                isError: false,
+                                            })
+                                        } else {
+                                            if (!selected_item.URL.includes('https://www.youtube.com/')) {
+                                                console.warn('Format found! video else11');
+                                                this.setState({
+                                                    youtubeUrl: selected_item.URL,
+                                                    isError: false,
+                                                })
+                                            } else {
+                                                console.warn('Format found! video else111');
+                                                this.setState({
+                                                    isError: true,
+                                                    youtubeUrl: undefined,
+                                                    errorMessage: 'No video available. Please contact to admin for more details.'
+                                                }, () => {
+                                                    this.callExtractionLogApi(this.state.access_token, err, 'error', selected_item.URL2)
+                                                })
+                                            }
+                                        }
+                                    } else {
+                                        if (this.state.selected_item != undefined && this.state.selected_item.TMP_VIDEO_URL != '' &&
+                                            this.state.selected_item.TMP_VIDEO_URL != null) {
+                                            console.warn('Format found! video else10');
+                                            this.setState({
+                                                youtubeUrl: this.state.selected_item.TMP_VIDEO_URL,
+                                                isError: false,
+                                            })
+                                        } else {
+                                            if (!selected_item.URL.includes('https://www.youtube.com/')) {
+                                                console.warn('Format found! video else11');
+                                                this.setState({
+                                                    youtubeUrl: selected_item.URL,
+                                                    isError: false,
+                                                })
+                                            } else {
+                                                console.warn('Format found! video else111');
+                                                this.setState({
+                                                    isError: true,
+                                                    youtubeUrl: undefined,
+                                                    errorMessage: 'No video available. Please contact to admin for more details.'
+                                                }, () => {
+                                                    this.callExtractionLogApi(this.state.access_token, err, 'error', selected_item.URL2)
+                                                })
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                //check condition vimeo is visible or not
+                                if (global.isVimeoPlayerVisible) {
+                                    //4Aug2020 adding new condition for VEMIO player
+                                    if (this.state.selected_item != undefined && this.state.selected_item.VIMEO_URL != '' &&
+                                        this.state.selected_item.VIMEO_URL != null) {
+                                        isVideoRecordingVemio = true
+                                        this.setState({
+                                            isVimeoURLVisible: true,
+                                            vimeoVideoIDForPlay: this.state.selected_item.VIMEO_URL,
+                                            isError: false,
+                                        })
+                                    }
+                                    //Here work for test url
+                                    else if (this.state.selected_item != undefined && this.state.selected_item.TMP_VIDEO_URL != null &&
+                                        this.state.selected_item.TMP_VIDEO_URL != '') {
+                                        console.warn('Format found! video else12');
+                                        this.setState({
+                                            youtubeUrl: this.state.selected_item.TMP_VIDEO_URL,
+                                            isError: false,
+                                        })
+                                    } else {
+                                        if (!selected_item.URL.includes('https://www.youtube.com/')) {
+                                            console.warn('Format found! video else13');
+                                            this.setState({
+                                                youtubeUrl: selected_item.URL,
+                                                isError: false,
+                                            })
+                                        } else {
+                                            console.warn('Format found! video else133');
+                                            this.setState({
+                                                isError: true,
+                                                youtubeUrl: undefined,
+                                                errorMessage: 'No video available. Please contact to admin for more details.'
+                                            }, () => {
+                                                this.callExtractionLogApi(this.state.access_token, err, 'error', selected_item.URL)
+                                            })
+                                        }
+                                    }
+                                } else {
+                                    if (this.state.selected_item != undefined && this.state.selected_item.TMP_VIDEO_URL != '' &&
+                                        this.state.selected_item.TMP_VIDEO_URL != null) {
+                                        console.warn('Format found! video else122');
+                                        this.setState({
+                                            youtubeUrl: this.state.selected_item.TMP_VIDEO_URL,
+                                            isError: false,
+                                        })
+                                    } else {
+                                        if (!selected_item.URL.includes('https://www.youtube.com/')) {
+                                            console.warn('Format found! video else13');
+                                            this.setState({
+                                                youtubeUrl: selected_item.URL,
+                                                isError: false,
+                                            })
+                                        } else {
+                                            console.warn('Format found! video else133');
+                                            this.setState({
+                                                isError: true,
+                                                youtubeUrl: undefined,
+                                                errorMessage: 'No video available. Please contact to admin for more details.'
+                                            }, () => {
+                                                this.callExtractionLogApi(this.state.access_token, err, 'error', selected_item.URL)
+                                            })
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                })
+                    .catch((e) => {
+                        this.setState({
+                            isError: true,
+                            youtubeUrl: undefined,
+                            errorMessage: 'No video available. Please contact to admin for more details.'
+                        }, () => {
+                            //this.callExtractionLogApi(this.state.access_token, e, 'error')
+                        })
+                    })
+            } else {
+                console.warn('Format found! video else13');
+                this.setState({
+                    isError: true,
+                    youtubeUrl: undefined,
+                    errorMessage: 'No video available. Please contact to admin for more details.'
+                })

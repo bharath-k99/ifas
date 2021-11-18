@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <!-- <domain includeSubdomains="true">13.234.117.40</domain> -->
+        <domain includeSubdomains="true">localhost</domain> 
+    </domain-config>
+</network-security-config>
+
+<!--<network-security-config>-->
+
+<!--  <domain-config cleartextTrafficPermitted="true">-->
+<!--    <domain includeSubdomains="true">wg</domain>-->
+<!--    <domain includeSubdomains="true">13.234.117.40</domain>-->
+<!--    <domain includeSubdomains="true">voxpopuli_qa</domain>-->
+<!--    <domain includeSubdomains="false">localhost</domain>-->
+
+<!--    </domain-config>-->
+<!--</network-security-config>-->
+
+<!-- <network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">voxpopuli_qa</domain>
+    </domain-config>
+    <base-config cleartextTrafficPermitted="false" />
+</network-security-config> -->
+
+<!-- http://13.234.117.40/wg/voxpopuli_qa/api/ -->

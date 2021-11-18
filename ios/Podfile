@@ -1,0 +1,35 @@
+# Uncomment the next line to define a global platform for your project
+platform :ios, '10.3'
+
+target 'ifasApp' do
+  # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
+  # use_frameworks! $(SRCROOT)/../node_modules/react-native-youtube
+
+  # Pods for ifasApp
+
+  # Required by RNFirebase
+  pod 'Firebase/Core'#, '~> 5.9.0'
+  pod 'Firebase/Messaging'#, '~> 5.9.0'
+  pod 'Fabric'#, '~> 1.7.11'
+  pod 'Crashlytics'#, '~> 3.10.7'
+  pod 'IQKeyboardManager'
+    
+  rn_path = '../node_modules/react-native'
+
+#  pod 'rn-fetch-blob', :path => '../node_modules/rn-fetch-blob'
+#
+#  pod 'react-native-pdf', :path => '../node_modules/react-native-pdf'
+#pod 'yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
+#
+#pod 'react-native-background-downloader', :path => '../node_modules/react-native-background-downloader'
+
+  pod 'react-native-webview', :path => '../node_modules/react-native-webview'
+
+
+  pod 'RNAudioRecorderPlayer', :path => '../node_modules/react-native-audio-recorder-player'
+
+  pod 'react-native-track-player', :path => '../node_modules/react-native-track-player'
+
+
+end
+

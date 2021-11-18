@@ -1,0 +1,27 @@
+{
+  "name": "react-native-background-downloader",
+  "version": "2.3.4",
+  "summary": "React Native background downloader",
+  "description": "A library for React-Native to help you download large files on iOS and Android both in the foreground and most importantly in the background.",
+  "authors": {
+    "name": "Eko labs",
+    "email": "dev@helloeko.com",
+    "url": "https://developer.helloeko.com"
+  },
+  "homepage": "git+https://github.com/EkoLabs/react-native-background-downloader.git",
+  "license": "Apache-2.0",
+  "platforms": {
+    "ios": "7.0"
+  },
+  "source": {
+    "git": "https://github.com/EkoLabs/react-native-background-downloader.git",
+    "tag": "master"
+  },
+  "source_files": "ios/**/*.{h,m}",
+  "requires_arc": true,
+  "dependencies": {
+    "React": [
+
+    ]
+  }
+}
